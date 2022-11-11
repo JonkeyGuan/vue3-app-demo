@@ -15,14 +15,16 @@ npm config set registry https://registry.npm.taobao.org
 npm config set registry  https://registry.npmjs.org/
 ```
 
+## 设置访问证书
+```
+npm set strict-ssl false  
+```
+
+
 ## 使用vite + Vue 模版创建工程
 ```
 npm create vite@latest my-vue-app3 --template vue
 
-```
-## 设置访问证书
-```
-npm set strict-ssl false  
 ```
 
 ## 安装脚手架
