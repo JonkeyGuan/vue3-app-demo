@@ -11,6 +11,15 @@ const key = "__mr_vue_framework_keycloak";
  */
 const login = (options: InstallOptionsModel) => {
     return new Promise<KeycloakModel>((resolve) => {
+        sessionStorage.setItem("keycloak", JSON.stringify(options));
+
+        if (window.location.href.indexOf("code") < 0) {
+            resolve();
+            return;
+        }
+
+        //const _options = JSON.parse(sessionStorage.getItem("keycloak")!);
+
         // 配置
         const config: VueKeycloakOptions = {
             init: {
@@ -41,6 +50,7 @@ const login = (options: InstallOptionsModel) => {
  * @returns 返回Keycloak实例
  */
 const getKeycloak = () => {
+
     const model = window[key] as KeycloakModel;
 
     if (!model) {
@@ -50,24 +60,43 @@ const getKeycloak = () => {
     return model;
 };
 
+const isLogin = () => {
+    const model = window[key] as KeycloakModel;
+
+    if (!model) {
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * 获取登录token
  * @returns 返回登录token
  */
 const getToken = () => {
+    if(!isLogin()){
+        return ;
+    }
     const model = getKeycloak();
 
     return model.instance.token;
 };
 
-const getRoles = ()=>{
+const getRoles = () => {
+    if(!isLogin()){
+        return ;
+    }
     const model = getKeycloak();
 
     return model.instance.realmAccess;
 };
 
-const getUsername = ()=>{
-    const idtoken = getKeycloak().instance.idTokenParsed;
+const getUsername = () => {
+    if(!isLogin()){
+        return ;
+    }
+    const idtoken = getKeycloak().instance.idTokenParsed!;
     const name = idtoken.preferred_username;
     return name;
 
@@ -77,9 +106,12 @@ const getUsername = ()=>{
  * 退出登录
  */
 const logout = () => {
+    if(!isLogin()){
+        return ;
+    }
     const model = getKeycloak();
 
     model.instance.logout();
 };
 
-export { login, getKeycloak, getToken, logout,getRoles ,getUsername};
+export { login, getKeycloak, getToken, logout, getRoles, getUsername };

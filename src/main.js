@@ -1,22 +1,36 @@
-import { createApp } from 'vue'
 import './style.css'
+import './bootstrap.css'
+import { createApp } from 'vue'
 import router from './router'
 import App from './App.vue'
 import { login } from "./keycloak";
 
-const res = await login({
+
+const myAppConfig = {
+    url: import.meta.env.VITE_URL_KEYCLOAKSERVER,
+    realm: import.meta.env.VITE_URL_KEYCLOAKSERVER_REALM,
+    clientId: import.meta.env.VITE_URL_KEYCLOAKSERVER_CLIENTID,
+    usermanage: import.meta.env.VITE_URL_USERMANAGE
+}
+
+/*
+        url: 'http://sso.example.com:8080/auth',
+        realm:'heroes',
+        clientId:'spa-heroes'
+*/
+
+login({
     config:{
-        url: 'http://127.0.0.1:8080/auth',
-        realm: 'springboot',
-        clientId: 'vue-app',
+        url: import.meta.env.VITE_URL_KEYCLOAKSERVER,
+        realm: import.meta.env.VITE_URL_KEYCLOAKSERVER_REALM,
+        clientId: import.meta.env.VITE_URL_KEYCLOAKSERVER_CLIENTID
     }
-});
-
-console.log(res);
-
+}).then(()=>{
 const app = createApp(App);
+app.config.globalProperties["appConfig"] = myAppConfig;
 app.use(router);
-app.mount('#app')
+app.mount('#app');
+});
 
 /*
 
